@@ -6,6 +6,27 @@ $secondary-color: #000000;
     background: linear-gradient(to bottom, $primary-color, $secondary-color);
   }
 
+  @mixin animations($name, $duration, $easing, $keyframes) {
+    @keyframes #{$name} {
+      @each $keyframe in $keyframes {
+        #{nth($keyframe, 1)} {
+          @content;
+          @each $property, $value in nth($keyframe, 2) {
+            #{$property}: #{$value};
+          }
+        }
+      }
+    }
+    
+    animation: #{$name} #{$duration} #{$easing} infinite;
+  }
+  
+  // Define the keyframes for the textclip animation
+  $keyframes-textclip: (
+    (0%, (background-position: 0% center)),
+    (100%, (background-position: 200% center))
+  );
+
 html {
   height: 100%;
   width: 100%;
@@ -29,27 +50,21 @@ body {
 }
 
 h1 {
-    padding-left: 19%;
-    font-size: 50px;
-    text-transform: uppercase;
-    font-family: "Josefin Sans", sans-serif;
-    background: linear-gradient(to left,#b30000 10%, #ff0000 50%, #000000 60%);
-    background-size: auto auto;
-    background-clip: border-box;
-    background-size: 200% auto;
-    background-clip: text;
-    text-fill-color: transparent;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: textclip 2s linear infinite;
-    display: inline-block;
-    }
+  padding-left: 19%;
+  font-size: 50px;
+  text-transform: uppercase;
+  font-family: "Josefin Sans", sans-serif;
+  background: linear-gradient(to left, #b30000 10%, #ff0000 50%, #000000 60%);
+  background-size: 200% auto;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
   
-  @keyframes textclip {
-    to {
-      background-position: 200% center;
-    }
-  }
+  @include animations(textclip, 2s, linear, $keyframes-textclip);
+}
+
 
 .input-section {
     margin-bottom: 20px;
